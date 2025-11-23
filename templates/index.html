@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forest Fire FWI Prediction Project</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7; /* Lighter background */
+        }
+        .fire-icon {
+            /* Custom flame icon using SVG for crisp graphics */
+            background-color: #dc2626; /* Red-600 */
+            -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 16.5c-1.39 0-2.22-.5-3-1.5c-.78-1-1.5-3.5-1.5-6.5h1.5c0 2.5.5 4.5 2 6c1.5-1.5 2-4.5 2-6h1.5c0 3-1.22 5.5-2.22 6.5s-2 1.5-3 1.5z"/></svg>') no-repeat center;
+            mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 16.5c-1.39 0-2.22-.5-3-1.5c-.78-1-1.5-3.5-1.5-6.5h1.5c0 2.5.5 4.5 2 6c1.5-1.5 2-4.5 2-6h1.5c0 3-1.22 5.5-2.22 6.5s-2 1.5-3 1.5z"/></svg>') no-repeat center;
+        }
+        .card-shadow {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="w-full max-w-5xl bg-white p-8 md:p-12 rounded-xl card-shadow space-y-10 border-t-8 border-red-700">
+        
+        <!-- Main Project Header -->
+        <header class="text-center space-y-5">
+            <div class="flex justify-center mb-4">
+                <div class="fire-icon w-16 h-16 transform rotate-12"></div>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+                Algerian Forest Fire Prediction
+            </h1>
+            <p class="text-xl text-gray-500 font-medium">Leveraging Machine Learning to Forecast Fire Weather Index (FWI)</p>
+        </header>
+
+        <!-- Project Overview -->
+        <section class="space-y-6">
+            <h2 class="text-3xl font-bold text-red-700 border-b-2 border-red-200 pb-3">Project Overview</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm transition hover:shadow-md">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        The Goal
+                    </h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        This project is dedicated to predicting the Fire Weather Index (FWI), a critical measure of fire danger, using various meteorological factors from Algerian forest regions. Accurate FWI forecasts are essential for timely fire prevention and resource deployment, saving lives and natural resources.
+                    </p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm transition hover:shadow-md">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63L15.34 3a1 1 0 0 1 1.63.78L5.63 15a1 1 0 0 1-.79.78zM19 10L9 14"></path></svg>
+                        Data & Features
+                    </h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        The model utilizes a cleaned dataset of daily weather observations, focusing on critical fire codes (FFMC, DMC, and ISI) alongside meteorological inputs like Temperature, Relative Humidity (RH), Wind Speed (Ws), and Rainfall (Rain). Feature engineering was performed to select the most impactful variables for prediction.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Model Summary (Based on IPYNB results) -->
+        <section class="space-y-6">
+            <h2 class="text-3xl font-bold text-red-700 border-b-2 border-red-200 pb-3">Model Performance & Selection</h2>
+            <div class="bg-red-50 p-6 rounded-xl shadow-inner border border-red-200">
+                <p class="text-lg text-gray-800 mb-4 font-medium">
+                    Our machine learning pipeline evaluated several regression models, ultimately selecting the one that delivered the highest predictive capability and stability.
+                </p>
+                <ul class="list-none space-y-3">
+                    <li class="flex items-start text-gray-700">
+                        <span class="text-red-600 font-bold text-xl mr-3">✓</span>
+                        <div>
+                            <span class="font-semibold">Primary Model:</span> <span class="text-red-700 font-bold">Ridge Regression (Regularized Linear Model)</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start text-gray-700">
+                        <span class="text-red-600 font-bold text-xl mr-3">✓</span>
+                        <div>
+                            <span class="font-semibold">Key Metric (R² Score):</span> Achieved a robust score of <span class="text-red-700 font-bold">~0.983</span> on the test set, demonstrating excellent fit and generalization capability.
+                        </div>
+                    </li>
+                    <li class="flex items-start text-gray-700">
+                        <span class="text-red-600 font-bold text-xl mr-3">✓</span>
+                        <div>
+                            <span class="font-semibold">Preprocessing:</span> All features are scaled using <span class="text-red-700 font-bold">Standard Scaling</span> to ensure the model trains efficiently and accurately.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="pt-8 text-center">
+            <p class="text-2xl text-gray-700 mb-6 font-semibold">
+                Start predicting the Forest Fire Weather Index now.
+            </p>
+            
+            <!-- Button that links to the Flask prediction route -->
+            <a href="{{ url_for('predict_datapoint') }}" 
+               class="inline-block bg-red-700 hover:bg-red-800 text-white font-bold py-4 px-12 rounded-full shadow-2xl transition duration-300 ease-in-out transform hover:scale-105 ring-4 ring-red-300">
+                Go to Prediction Tool →
+            </a>
+        </section>
+
+        <footer class="text-center pt-8 text-sm text-gray-400 border-t border-gray-100">
+            Machine Learning Project | Algerian Forest Fire Data
+        </footer>
+    </div>
+</body>
+</html>
