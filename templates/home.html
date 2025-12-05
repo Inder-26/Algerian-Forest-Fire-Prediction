@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forest Fire Weather Index Predictor</title>
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom scrollbar for better aesthetics */
@@ -16,156 +15,209 @@
             border-radius: 4px;
         }
         body {
-            font-family: 'Inter', sans-serif;
+            /* Using a common, accessible font stack */
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
             background-color: #f7f7f7;
         }
         .input-group {
             transition: all 0.2s;
         }
+        /* Adjusted focus style for better contrast */
         .input-group:focus-within {
-            box-shadow: 0 0 0 2px #dc2626; /* Red-600 ring */
+            box-shadow: 0 0 0 2px #f87171; /* Red-400 ring */
+            border-color: #f87171;
         }
         .card-shadow {
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        /* Keyframe for pulse animation */
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0px rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0px rgba(239, 68, 68, 0); }
+        }
+        .animate-pulse-ring {
+            animation: pulse-ring 1.5s infinite;
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center p-4">
-    <div class="w-full max-w-4xl bg-white p-8 md:p-10 rounded-xl card-shadow space-y-8 border-t-4 border-red-700">
+    <div class="w-full max-w-4xl bg-white p-8 md:p-10 my-8 rounded-xl card-shadow space-y-8 border-t-4 border-red-700">
         
-        <!-- Header Section -->
         <header class="text-center">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-red-700 mb-2">
-                🔥 FWI Prediction Tool
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-2">
+                <span class="text-red-700">🔥</span> FWI Prediction Tool
             </h1>
             <p class="text-gray-600 text-lg">Predicting Forest Fire Intensity using ML</p>
         </header>
 
-        <!-- Project Context / Explanation Section -->
-        <section class="p-6 bg-red-50 rounded-xl border border-red-200">
-            <h2 class="text-2xl font-bold text-red-700 mb-3">Project Context: FWI Index</h2>
+        <section class="p-6 bg-red-50 rounded-xl border border-red-200" aria-labelledby="context-heading">
+            <h2 id="context-heading" class="text-2xl font-bold text-red-700 mb-3">Project Context: FWI Index</h2>
             <p class="text-gray-700">
-                This tool uses a trained Ridge Regression Model to estimate the Fire Weather Index (FWI). Please input the required meteorological and fuel moisture codes below for an accurate forecast.
+                This tool uses a trained **Ridge Regression Model** to estimate the Fire Weather Index (FWI). Please input the required meteorological and fuel moisture codes below for an accurate forecast.
             </p>
         </section>
 
-        <!-- Prediction Form -->
-        <section>
-            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Enter Meteorological Data</h2>
+        <section aria-labelledby="form-heading">
+            <h2 id="form-heading" class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Enter Meteorological Data</h2>
             
             <form action="{{ url_for('predict_datapoint') }}" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <!-- Temperature -->
                 <div class="input-group bg-gray-50 p-4 rounded-lg">
                     <label for="Temperature" class="block text-sm font-medium text-gray-700 mb-1">Temperature (°C)</label>
-                    <input type="number" step="any" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600" 
-                           id="Temperature" name="Temperature" placeholder="e.g., 29.5" required>
-                    <p class="text-xs text-gray-500 mt-1">Daily maximum air temperature.</p>
+                    <input type="number" step="any" min="0" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600" 
+                                id="Temperature" name="Temperature" placeholder="e.g., 29.5" required aria-describedby="temp-desc">
+                    <p id="temp-desc" class="text-xs text-gray-500 mt-1">Daily maximum air temperature.</p>
                 </div>
 
-                <!-- Relative Humidity (RH) -->
                 <div class="input-group bg-gray-50 p-4 rounded-lg">
                     <label for="RH" class="block text-sm font-medium text-gray-700 mb-1">Relative Humidity (RH, %)</label>
-                    <input type="number" step="any" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600" 
-                           id="RH" name="RH" placeholder="e.g., 55.0" required>
-                    <p class="text-xs text-gray-500 mt-1">Noon relative humidity.</p>
+                    <input type="number" step="any" min="0" max="100" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600" 
+                                id="RH" name="RH" placeholder="e.g., 55.0" required aria-describedby="rh-desc">
+                    <p id="rh-desc" class="text-xs text-gray-500 mt-1">Noon relative humidity.</p>
                 </div>
 
-                <!-- Wind Speed (Ws) -->
                 <div class="input-group bg-gray-50 p-4 rounded-lg">
                     <label for="Ws" class="block text-sm font-medium text-gray-700 mb-1">Wind Speed (Ws, km/h)</label>
-                    <input type="number" step="any" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600" 
-                           id="Ws" name="Ws" placeholder="e.g., 14.0" required>
-                    <p class="text-xs text-gray-500 mt-1">Noon wind speed.</p>
+                    <input type="number" step="any" min="0" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600" 
+                                id="Ws" name="Ws" placeholder="e.g., 14.0" required aria-describedby="ws-desc">
+                    <p id="ws-desc" class="text-xs text-gray-500 mt-1">Noon wind speed.</p>
                 </div>
 
-                <!-- Rain (Rain) -->
                 <div class="input-group bg-gray-50 p-4 rounded-lg">
                     <label for="Rain" class="block text-sm font-medium text-gray-700 mb-1">Rain (mm)</label>
-                    <input type="number" step="any" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600" 
-                           id="Rain" name="Rain" placeholder="e.g., 0.0 (for no rain)" required>
-                    <p class="text-xs text-gray-500 mt-1">24-hour accumulated rainfall.</p>
+                    <input type="number" step="any" min="0" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600" 
+                                id="Rain" name="Rain" placeholder="e.g., 0.0 (for no rain)" required aria-describedby="rain-desc">
+                    <p id="rain-desc" class="text-xs text-gray-500 mt-1">24-hour accumulated rainfall.</p>
                 </div>
 
-                <!-- Fine Fuel Moisture Code (FFMC) -->
                 <div class="input-group bg-gray-50 p-4 rounded-lg">
                     <label for="FFMC" class="block text-sm font-medium text-gray-700 mb-1">Fine Fuel Moisture Code (FFMC)</label>
-                    <input type="number" step="any" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600" 
-                           id="FFMC" name="FFMC" placeholder="e.g., 85.1" required>
-                    <p class="text-xs text-gray-500 mt-1">Moisture content of fine fuels (high value = dry fuel).</p>
+                    <input type="number" step="any" min="0" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600" 
+                                id="FFMC" name="FFMC" placeholder="e.g., 85.1" required aria-describedby="ffmc-desc">
+                    <p id="ffmc-desc" class="text-xs text-gray-500 mt-1">Moisture content of fine fuels (high value = dry fuel).</p>
                 </div>
 
-                <!-- Duff Moisture Code (DMC) -->
                 <div class="input-group bg-gray-50 p-4 rounded-lg">
                     <label for="DMC" class="block text-sm font-medium text-gray-700 mb-1">Duff Moisture Code (DMC)</label>
-                    <input type="number" step="any" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600" 
-                           id="DMC" name="DMC" placeholder="e.g., 18.3" required>
-                    <p class="text-xs text-gray-500 mt-1">Moisture content of moderate dead organic matter.</p>
+                    <input type="number" step="any" min="0" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600" 
+                                id="DMC" name="DMC" placeholder="e.g., 18.3" required aria-describedby="dmc-desc">
+                    <p id="dmc-desc" class="text-xs text-gray-500 mt-1">Moisture content of moderate dead organic matter.</p>
                 </div>
 
-                <!-- Initial Spread Index (ISI) -->
                 <div class="input-group bg-gray-50 p-4 rounded-lg">
                     <label for="ISI" class="block text-sm font-medium text-gray-700 mb-1">Initial Spread Index (ISI)</label>
-                    <input type="number" step="any" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600" 
-                           id="ISI" name="ISI" placeholder="e.g., 6.5" required>
-                    <p class="text-xs text-gray-500 mt-1">Rate of fire spread (based on FFMC and Ws).</p>
+                    <input type="number" step="any" min="0" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600" 
+                                id="ISI" name="ISI" placeholder="e.g., 6.5" required aria-describedby="isi-desc">
+                    <p id="isi-desc" class="text-xs text-gray-500 mt-1">Rate of fire spread (based on FFMC and Ws).</p>
                 </div>
 
-                <!-- Region -->
                 <div class="input-group bg-gray-50 p-4 rounded-lg">
                     <label for="Region" class="block text-sm font-medium text-gray-700 mb-1">Region (0 or 1)</label>
                     <select id="Region" name="Region" required 
-                            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600 bg-white">
+                             class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600 bg-white" aria-describedby="region-desc">
                         <option value="" disabled selected>Select Region</option>
                         <option value="0">Region 0 (e.g., Bejaia)</option>
                         <option value="1">Region 1 (e.g., Sidi Bel-Abbès)</option>
                     </select>
-                    <p class="text-xs text-gray-500 mt-1">A binary encoded region feature, consistent with the model.</p>
+                    <p id="region-desc" class="text-xs text-gray-500 mt-1">A binary encoded region feature, consistent with the model.</p>
                 </div>
 
-                <!-- Predict Button - spanning both columns on desktop -->
                 <div class="md:col-span-2 pt-4">
                     <button type="submit" 
-                            class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-4 rounded-full shadow-xl transition duration-150 ease-in-out transform hover:scale-[1.01] ring-4 ring-red-300">
+                            class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-4 rounded-full shadow-xl transition duration-150 ease-in-out transform hover:scale-[1.01] ring-2 ring-red-300/50 hover:ring-red-400/70">
                         Calculate FWI
                     </button>
                 </div>
             </form>
         </section>
 
-        <!-- Results Section -->
-        {% if results is not none %}
-        <section class="mt-8 space-y-4">
-            {% if fwi_result is not none %}
-            <div class="bg-red-50 border-l-4 border-red-600 text-gray-800 p-6 rounded-lg" role="alert">
+        {% if fwi_result is not none %}
+        <section id="results-section" class="mt-8 space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-red-600" role="alert" aria-live="polite">
                 <h2 class="text-2xl font-bold mb-2 text-red-700">Prediction Result</h2>
                 <p class="text-5xl font-extrabold flex items-center">
                     FWI Score: 
-                    <span class="ml-4 text-red-600">{{ fwi_result | float | default(0) | round(2) }}</span>
+                    <span id="fwi-score" class="ml-4 text-red-600">{{ fwi_result | float | default(0) | round(2) }}</span>
                 </p>
             </div>
-            {% else %}
-            <!-- Display Error/Message -->
-            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-6 rounded-lg" role="alert">
-                <h2 class="text-2xl font-bold mb-2">Server Message</h2>
-                <p class="text-lg">{{ results }}</p>
-            </div>
-            {% endif %}
             
-            <!-- FWI Danger Scale -->
-            <div class="p-6 bg-gray-50 rounded-xl border border-gray-200">
-                <h3 class="text-xl font-semibold mb-3 text-gray-700">FWI Interpretation Scale</h3>
-                <div class="grid grid-cols-5 text-center text-xs md:text-sm font-medium">
-                    <div class="p-2 rounded-l-lg bg-green-200 text-green-800 border-r-2 border-white">0-5 (Low)</div>
-                    <div class="p-2 bg-yellow-200 text-yellow-800 border-r-2 border-white">6-11 (Moderate)</div>
-                    <div class="p-2 bg-orange-200 text-orange-800 border-r-2 border-white">12-18 (High)</div>
-                    <div class="p-2 bg-red-300 text-red-800 border-r-2 border-white">19-30 (Very High)</div>
-                    <div class="p-2 rounded-r-lg bg-red-500 text-white">30+ (Extreme)</div>
+            <div class="p-6 bg-gray-50 rounded-xl border border-gray-200" aria-labelledby="scale-heading">
+                <h3 id="scale-heading" class="text-xl font-semibold mb-3 text-gray-700">FWI Interpretation Scale (Standard)</h3>
+                <div class="grid grid-cols-6 text-center text-xs md:text-sm font-bold shadow-inner rounded-lg overflow-hidden">
+                    
+                    <div id="fwi-0" data-min="0" data-max="5.19" class="p-3 bg-green-100 text-green-700 border-r border-white">
+                        <span class="block">0-5.2</span><span class="block font-normal">Very Low</span>
+                    </div>
+                    
+                    <div id="fwi-1" data-min="5.2" data-max="11.19" class="p-3 bg-lime-200 text-lime-800 border-r border-white">
+                        <span class="block">5.2-11.2</span><span class="block font-normal">Low</span>
+                    </div>
+
+                    <div id="fwi-2" data-min="11.2" data-max="21.29" class="p-3 bg-yellow-400 text-yellow-800 border-r border-white">
+                        <span class="block">11.2-21.3</span><span class="block font-normal">Moderate</span>
+                    </div>
+
+                    <div id="fwi-3" data-min="21.3" data-max="37.99" class="p-3 bg-orange-500 text-white border-r border-white">
+                        <span class="block">21.3-38.0</span><span class="block font-normal">High</span>
+                    </div>
+
+                    <div id="fwi-4" data-min="38.0" data-max="49.99" class="p-3 bg-red-600 text-white border-r border-white">
+                        <span class="block">38.0-50.0</span><span class="block font-normal">Very High</span>
+                    </div>
+
+                    <div id="fwi-5" data-min="50.0" data-max="999" class="p-3 bg-red-900 text-white">
+                        <span class="block">50.0+</span><span class="block font-normal">Extreme</span>
+                    </div>
+
                 </div>
             </div>
         </section>
+        {% elif results is not none %}
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-6 rounded-lg" role="alert">
+            <h2 class="text-2xl font-bold mb-2">Server Message</h2>
+            <p class="text-lg">{{ results }}</p>
+        </div>
         {% endif %}
 
     </div>
+<script>
+    // Unobtrusive JavaScript to dynamically highlight the correct hazard level
+    document.addEventListener('DOMContentLoaded', function() {
+        const fwiScoreElement = document.getElementById('fwi-score');
+        const resultsSection = document.getElementById('results-section');
+
+        if (fwiScoreElement && resultsSection) {
+            const fwiScore = parseFloat(fwiScoreElement.textContent);
+            highlightFWILevel(fwiScore);
+        }
+    });
+
+    /**
+     * Highlights the correct danger level block based on the FWI score.
+     * @param {number} score The calculated FWI score.
+     */
+    function highlightFWILevel(score) {
+        const scaleBlocks = document.querySelectorAll('#scale-heading + div > div');
+        
+        scaleBlocks.forEach(block => {
+            const min = parseFloat(block.dataset.min);
+            const max = parseFloat(block.dataset.max);
+            
+            // Check if the score falls within the block's range
+            if (score >= min && score <= max) {
+                // Remove existing highlight classes from all blocks
+                scaleBlocks.forEach(b => {
+                    b.classList.remove('animate-pulse-ring', 'shadow-2xl', 'scale-105');
+                    b.style.zIndex = 1;
+                });
+                
+                // Add highlight classes and a subtle scale/shadow for the active block
+                block.classList.add('animate-pulse-ring', 'shadow-2xl', 'scale-105');
+                block.style.zIndex = 10; // Bring to front
+            }
+        });
+    }
+</script>
 </body>
 </html>
